@@ -5,16 +5,16 @@ https://colab.research.google.com/drive/109vu3F1LTzD1gdVV6cho9fKGx7lzbFll#scroll
 import os
 import pandas as pd
 import cv2
+import torch
 from torch.utils.data import Dataset
 from torchvision import transforms
 import numpy as np
-import torch
 
 
 
 class Dataset_CSV(Dataset):
-    def __init__(self, csv_or_df, multi_labels=False, image_shape=None, imgaug_iaa=None, test_mode=False):
-        self.multi_labels = multi_labels
+    def __init__(self, csv_or_df, single_label=None, image_shape=None, imgaug_iaa=None, test_mode=False):
+        self.single_label = single_label
         if isinstance(csv_or_df, str):
             assert os.path.exists(csv_or_df), 'csv file does not exists'
             self.df = pd.read_csv(csv_or_df)
@@ -51,9 +51,11 @@ class Dataset_CSV(Dataset):
         image = self.transform(image)
 
         if not self.test_mode:
-            if not self.multi_labels:
-                label = int(self.df.iloc[index][1])
-                return image, label
+            if self.single_label is not None:
+                list_labels = []
+                list_labels.append(self.df.iloc[index][1].split('_')[self.single_label])
+                labels = np.asarray(list_labels, dtype=np.float32)
+                return image, labels
             else:
                 list_labels = []
                 labels_str = self.df.iloc[index][1]

@@ -14,7 +14,7 @@ from imgaug import augmenters as iaa
 from libs.NeuralNetworks.Helper.my_load_model import load_model
 
 # region setting
-save_model_dir = '/tmp2/wide_angel'
+save_model_dir = '/tmp2/wide_angel_test'
 train_type = 'wide_angle'
 data_version = 'v4'
 csv_train = os.path.join(os.path.abspath('..'),
@@ -43,11 +43,9 @@ iaa = iaa.Sequential([
 batch_size_train, batch_size_valid = 32, 64
 #'单纯性的格子样变性', '单纯性的孔源性视网膜脱离', '单纯性的视网膜破裂孔', '囊性视网膜突起', '正常眼底'
 # 872, 1012, 953, 4065, 64
-num_class = 3
-positive_weights = [5.5, 4.5, 3.5]
 
-num_class = 4
-positive_weights = [5.5, 4.5, 3.5, 60]
+num_class = 1
+positive_weights = [100]
 
 num_workers = 4  # when debugging it should be set to 0.
 
@@ -113,13 +111,13 @@ for model_name in ['inception_resnet_v2', 'xception', 'inception_v3']:
         image_shape = (224, 224)
     # endregion
 
-    ds_train = Dataset_CSV(csv_or_df=csv_train, imgaug_iaa=iaa, image_shape=image_shape)
+    ds_train = Dataset_CSV(csv_or_df=csv_train, single_label=3, imgaug_iaa=iaa, image_shape=image_shape)
     loader_train = DataLoader(ds_train, batch_size=batch_size_train, shuffle=True,
                               num_workers=num_workers)
-    ds_valid = Dataset_CSV(csv_or_df=csv_valid, image_shape=image_shape)
+    ds_valid = Dataset_CSV(csv_or_df=csv_valid, single_label=3, image_shape=image_shape)
     loader_valid = DataLoader(ds_valid, batch_size=batch_size_valid,
                               num_workers=num_workers)
-    ds_test = Dataset_CSV(csv_or_df=csv_test, image_shape=image_shape)
+    ds_test = Dataset_CSV(csv_or_df=csv_test, single_label=3, image_shape=image_shape)
     loader_test = DataLoader(ds_test, batch_size=batch_size_valid,
                              num_workers=num_workers)
 
