@@ -1,0 +1,37 @@
+
+
+Inception
+[[794  63]
+ [ 38 124]]
+Confusion Matrix of class 1
+[[758   8]
+ [ 37 216]]
+Confusion Matrix of class 2
+[[667  86]
+ [ 51 215]]
+
+inception_resnet_v2
+[[798  59]
+ [ 34 128]]
+Confusion Matrix of class 1
+[[761   5]
+ [ 37 216]]
+Confusion Matrix of class 2
+[[658  95]
+ [ 43 223]]
+
+2021_4_10 add 囊性视网膜突起
+ /tmp2/wide_angel/v3/inception_resnet_v2/epoch8.pth
+Confusion Matrix of class 0
+[[735 102]
+ [ 30 184]]
+Confusion Matrix of class 1
+[[749  14]
+ [ 23 265]]
+Confusion Matrix of class 2
+[[615 101]
+ [ 36 299]]
+Confusion Matrix of class 3
+[[970  64]
+ [  4  13]]
+
