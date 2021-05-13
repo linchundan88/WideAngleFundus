@@ -45,7 +45,7 @@ def compute_features(model, inputs, layer):
     return features
 
 @torch.no_grad()
-def compute_features_files(model, layer, csv_file, input_shape, batch_size=32):
+def compute_features_files(model, layer, data_loader):
     model.eval()
     if torch.cuda.device_count() > 0:
         device = torch.device("cuda")
@@ -53,9 +53,6 @@ def compute_features_files(model, layer, csv_file, input_shape, batch_size=32):
     else:
         device = torch.device("cpu")
 
-    dataset = Dataset_CSV(csv_or_df=csv_file, image_shape=input_shape, test_mode=True)
-    data_loader = DataLoader(dataset, batch_size=batch_size,
-                             num_workers=4)
 
     for batch_idx, inputs in enumerate(data_loader):
         print('batch:', batch_idx)

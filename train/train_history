@@ -1,4 +1,6 @@
 
+for the very small sample size class cystic retinal tuft,
+training an independent classifier instead of an multi-label classifier is impossible.
 
 Inception
 [[794  63]

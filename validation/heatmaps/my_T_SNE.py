@@ -4,16 +4,15 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import torch
 import torch.nn as nn
 from libs.NeuralNetworks.Helper.my_load_model import load_model
+from torch.utils.data import DataLoader
+from libs.Dataset.my_dataset import Dataset_CSV
 
-save_features = False
 
 num_classes = 4
-train_type = 'wide_angle'
-data_version = 'v4'
-csv_file = os.path.join(os.path.abspath('../..'),
-                'datafiles', data_version, 'test.csv')
+csv_file = os.path.join(os.path.abspath('../..'), 'datafiles', 'v5', 'test.csv')
+save_features = False
 
-model_name = 'inception_resnet_v2'
+model_name = 'inception_v3'
 
 if model_name == 'xception':
     model_file = '/tmp2/wide_angel/v3/xception/epoch7.pth'
@@ -43,9 +42,13 @@ if torch.cuda.device_count() > 0:
 if torch.cuda.device_count() > 1:
     model = nn.DataParallel(model)
 
+
+ds_test = Dataset_CSV(csv_or_df=csv_file, image_shape=image_shape, test_mode=True)
+loader_test = DataLoader(ds_test, batch_size=batch_size,
+                             num_workers=4)
+
 from libs.NeuralNetworks.T_SNE.my_tsne_helper import compute_features_files, gen_tse_features, draw_tsne
-features = compute_features_files(model, layer_features, csv_file=csv_file, input_shape=image_shape,
-                       batch_size=batch_size)
+features = compute_features_files(model, layer_features, loader_test)
 
 X_tsne = gen_tse_features(features)
 if save_features:
@@ -58,7 +61,7 @@ if save_features:
 #region gen T-SNE iamge
 
 for i in range(num_classes):
-    tsne_image_file = f'/disk1/share_8tb/广角眼底2021.04.12/results/T-SNE/test/{i}_{model_name}.png'
+    tsne_image_file = f'/disk1/share_8tb/广角眼底2021.04.22/results/T-SNE/test/{i}_{model_name}.png'
     os.makedirs(os.path.dirname(tsne_image_file), exist_ok=True)
     from libs.DataPreprocess.my_multi_labels import get_labels
     draw_tsne(X_tsne, get_labels(csv_file, class_index=i), nb_classes=2, save_tsne_image=tsne_image_file,

@@ -87,7 +87,7 @@ for model_name in ['inception_resnet_v2', 'xception', 'inception_v3']:
     # criterion = nn.BCELoss(weight=loss_class_weights)
     criterion = nn.BCEWithLogitsLoss(pos_weight=loss_pos_weights)
     optimizer = optim.Adam(model.parameters(), weight_decay=0, lr=0.001)
-    # from libs.NeuralNetworks.my_optimizer import Lookahead
+    # from libs.NeuralNetworks.Optimizer_obsolete.my_optimizer import Lookahead
     # optimizer = Lookahead(optimizer=optimizer, k=5, alpha=0.5)
 
     # region determine the input shape by the model type

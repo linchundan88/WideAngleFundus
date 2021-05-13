@@ -14,9 +14,9 @@ from imgaug import augmenters as iaa
 from libs.NeuralNetworks.Helper.my_load_model import load_model
 
 # region setting
-save_model_dir = '/tmp2/wide_angel_test'
+save_model_dir = '/tmp2/wide_angel/indepedent_classifier1'
 train_type = 'wide_angle'
-data_version = 'v4'
+data_version = 'v5'
 csv_train = os.path.join(os.path.abspath('..'),
                          'datafiles', data_version, 'train.csv')
 csv_valid = os.path.join(os.path.abspath('..'),

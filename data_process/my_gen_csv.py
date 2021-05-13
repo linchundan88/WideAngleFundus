@@ -96,3 +96,6 @@ write_images_labels_csv(test_files, test_labels, filename_csv_test)
 
 
 print('OK')
+
+
+

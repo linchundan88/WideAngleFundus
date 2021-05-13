@@ -48,8 +48,8 @@ if model_name == 'inception_resnet_v2':
 
 if torch.cuda.device_count() > 0:
     model.to(device)
-if torch.cuda.device_count() > 1:
-    model = nn.DataParallel(model)
+# if torch.cuda.device_count() > 1:
+#     model = nn.DataParallel(model)
 
 model = model.eval()
 #endregion

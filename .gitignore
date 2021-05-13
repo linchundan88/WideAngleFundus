@@ -1,6 +1,5 @@
 # Created by .ignore support plugin (hsz.mobi)
 
 .idea
-./WideAngle/datafiles/
 ./data_process/test_code/
-
+!/datafiles/
