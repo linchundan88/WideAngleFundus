@@ -28,7 +28,7 @@ def compute_digest_dir(base_dir, filename_csv, small_size=2048):
         csv_writer = csv.writer(csvfile, delimiter=',')
         csv_writer.writerow(['digest', 'file'])
 
-        for dir_path, subpaths, files in os.walk(base_dir, False):
+        for dir_path, _, files in os.walk(base_dir, False):
             for f in files:
                 image_file = os.path.join(dir_path, f)
 
@@ -50,7 +50,7 @@ def remove_match_or_not(base_dir, filename_csv, remove_match = False,
                         remove_not_match=False):
     df = pd.read_csv(filename_csv)  # panda dataframe
 
-    for dir_path, subpaths, files in os.walk(base_dir, False):
+    for dir_path, _, files in os.walk(base_dir, False):
         for f in files:
             file_base, file_ext = os.path.splitext(f)  # 分离文件名与扩展名
             if file_ext.lower() not in ['.bmp', '.jpg', '.jpeg', '.png', '.tiff', '.tif']:
@@ -81,7 +81,7 @@ def del_duplicate(dir_reference, dir_del, filename_csv='/tmp/del.csv'):
 
     df = pd.read_csv(filename_csv)
 
-    for dir_path, subpaths, files in os.walk(dir_del, False):
+    for dir_path, _, files in os.walk(dir_del, False):
         for f in files:
             img_file_source = os.path.join(dir_path, f)
 

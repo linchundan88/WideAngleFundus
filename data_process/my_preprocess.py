@@ -1,11 +1,12 @@
 import os
-import shutil
+import sys
+sys.path.append(os.path.abspath('..'))
 
 dir_original = '/disk1/share_8tb/广角眼底2021.04.12/original/'
 dir_preprocess = '/disk1/share_8tb/广角眼底2021.04.12/preprocess/384/'
 
 #prob97#10188519 01240793-20200831@153002-R2
-for dir_path, subpaths, files in os.walk(dir_original):
+for dir_path, _, files in os.walk(dir_original):
     for f in files:
         file_source = os.path.join(dir_path, f)
         file_base, file_ext = os.path.splitext(file_source)  # 分离文件名与扩展名

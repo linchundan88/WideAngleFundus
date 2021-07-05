@@ -1,6 +1,8 @@
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+import sys
+sys.path.append(os.path.abspath('..'))
 import pandas as pd
 from libs.DataPreprocess.my_data import get_images_labels
 from libs.NeuralNetworks.Helper.my_load_model import load_model

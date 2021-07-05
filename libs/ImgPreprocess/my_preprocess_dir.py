@@ -20,7 +20,7 @@ def do_preprocess_dir(source_dir, dest_dir, image_size=299, is_rop=False,
     if dest_dir.endswith('/'):
         dest_dir = dest_dir[:-1]
 
-    for dir_path, subpaths, files in os.walk(source_dir, False):
+    for dir_path, _, files in os.walk(source_dir, False):
         for f in files:
             img_file_source = os.path.join(dir_path, f)
 
@@ -56,7 +56,7 @@ def do_process_dir_G_channel(source_dir, dest_dir, image_size=299):
     if dest_dir.endswith('/'):
         dest_dir = dest_dir[:-1]
 
-    for dir_path, subpaths, files in os.walk(source_dir, False):
+    for dir_path, _, files in os.walk(source_dir, False):
         for f in files:
             img_file_source = os.path.join(dir_path, f)
 
@@ -79,7 +79,7 @@ def do_process_dir_G_channel(source_dir, dest_dir, image_size=299):
 #删除无效文件，预处理后个别文件错误
 def delete_small_files(dir, SMALL_SIZE_THRETHOLD = 2048):
 
-    for dir_path, subpaths, files in os.walk(dir, False):
+    for dir_path, _, files in os.walk(dir, False):
         for f in files:
             img_file_source = os.path.join(dir_path, f)
 
@@ -142,7 +142,7 @@ def do_process_dir_multi_processes(source_dir, dest_dir, list_imagesize=[299]):
     # for i_image_size in [299]:
     for i_image_size in list_imagesize:
         # 由于有多级目录
-        for dir_path, subpaths, files in os.walk(source_dir, False):
+        for dir_path, _, files in os.walk(source_dir, False):
             dir_path_pre = dir_path.replace(source_dir, dest_dir)
 
             for f in files:

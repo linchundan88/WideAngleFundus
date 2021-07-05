@@ -3,6 +3,8 @@ warnings.filterwarnings("ignore")
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
+import sys
+sys.path.append(os.path.abspath('..'))
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -126,9 +128,8 @@ for model_name in ['inception_resnet_v2', 'xception', 'inception_v3']:
 
     train(model,
           loader_train=loader_train,
-          criterion=criterion,
-          optimizer=optimizer, scheduler=scheduler,
-          epochs_num=epochs_num, log_interval_train=10,
+          criterion=criterion, optimizer=optimizer, scheduler=scheduler,
+          epochs_num=epochs_num, amp=False, log_interval_train=10,
           loader_valid=loader_valid, loader_test=loader_test,
           save_model_dir=os.path.join(save_model_dir, data_version, model_name)
           )

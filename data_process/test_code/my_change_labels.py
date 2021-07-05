@@ -5,7 +5,7 @@ dir1 = '/disk1/share_8tb/2021.4.9 新一模 错图/'
 dir2 = '/disk1/share_8tb/广角眼底2021.04.08/original'
 
 for label in ['格子样变性', '孔源性视网膜脱离', '视网膜破裂孔']:
-    for dir_path, subpaths, files in os.walk(os.path.join(dir1, label)):
+    for dir_path, _, files in os.walk(os.path.join(dir1, label)):
         for f in files:
             image_file = os.path.join(dir_path, f)
             _, filename = os.path.split(image_file)

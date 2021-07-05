@@ -3,6 +3,8 @@ warnings.filterwarnings("ignore")
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
+import sys
+sys.path.append(os.path.abspath('..'))
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -43,8 +45,6 @@ iaa = iaa.Sequential([
 batch_size_train, batch_size_valid = 32, 64
 #'单纯性的格子样变性', '单纯性的孔源性视网膜脱离', '单纯性的视网膜破裂孔', '囊性视网膜突起', '正常眼底'
 # 872, 1012, 953, 4065, 64
-num_class = 3
-positive_weights = [5.5, 4.5, 3.5]
 
 num_class = 4
 positive_weights = [5.5, 4.5, 3.5, 60]
@@ -85,7 +85,7 @@ for model_name in ['inception_resnet_v2', 'xception', 'inception_v3']:
 
     # pos_weight:positive negative balance, weight:rescaling weight given to the loss
     # criterion = nn.BCELoss(weight=loss_class_weights)
-    criterion = nn.BCEWithLogitsLoss(pos_weight=loss_pos_weights)
+    criterion = nn.BCEWithLogitsLoss(pos_weight=loss_pos_weights, reduction='mean')
     optimizer = optim.Adam(model.parameters(), weight_decay=0, lr=0.001)
     # from libs.NeuralNetworks.Optimizer_obsolete.my_optimizer import Lookahead
     # optimizer = Lookahead(optimizer=optimizer, k=5, alpha=0.5)
@@ -128,9 +128,8 @@ for model_name in ['inception_resnet_v2', 'xception', 'inception_v3']:
 
     train(model,
           loader_train=loader_train,
-          criterion=criterion,
-          optimizer=optimizer, scheduler=scheduler,
-          epochs_num=epochs_num, log_interval_train=10,
+          criterion=criterion, optimizer=optimizer, scheduler=scheduler,
+          epochs_num=epochs_num, amp=False, log_interval_train=10,
           loader_valid=loader_valid, loader_test=loader_test,
           save_model_dir=os.path.join(save_model_dir, data_version, model_name)
           )

@@ -6,7 +6,7 @@ from torch.nn import functional as F
 import torch.nn as nn
 from torch.utils.data import DataLoader
 from libs.Dataset.my_dataset import Dataset_CSV
-from libs.NeuralNetworks.Helper.obsoleted_my_is_inception import is_inception_model
+# from libs.NeuralNetworks.Helper.obsoleted_my_is_inception import is_inception_model
 
 
 def predict_csv_single_model(model, filename_csv, image_shape,

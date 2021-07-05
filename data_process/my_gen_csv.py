@@ -1,4 +1,6 @@
 import os
+import sys
+sys.path.append(os.path.abspath('..'))
 from libs.DataPreprocess.my_compute_digest import calcSha1
 import csv
 from libs.DataPreprocess.my_data import write_images_labels_csv
@@ -20,7 +22,7 @@ filename_csv_test = os.path.join(os.path.abspath('../'),
                 'datafiles', DATA_VERSION, 'test.csv')
 
 dict1 = {}
-for dir_path, subpaths, files in os.walk(dir_preprocess):
+for dir_path, _, files in os.walk(dir_preprocess):
     for f in files:
         image_file = os.path.join(dir_path, f)
         file_base, file_ext = os.path.splitext(image_file)  # 分离文件名与扩展名
@@ -32,7 +34,7 @@ for dir_path, subpaths, files in os.walk(dir_preprocess):
         dict1[sha1] = []
 
 for index, sub_dir in enumerate(list_labels):
-    for dir_path, subpaths, files in os.walk(os.path.join(dir_preprocess, sub_dir)):
+    for dir_path, _, files in os.walk(os.path.join(dir_preprocess, sub_dir)):
         for f in files:
             image_file = os.path.join(dir_path, f)
             file_base, file_ext = os.path.splitext(image_file)  # 分离文件名与扩展名
@@ -66,7 +68,7 @@ with open(filename_csv, 'w', newline='') as csvfile:
     csv_writer = csv.writer(csvfile, delimiter=',')
     csv_writer.writerow(['images', 'labels'])
 
-    for dir_path, subpaths, files in os.walk(dir_preprocess):
+    for dir_path, _, files in os.walk(dir_preprocess):
         for f in files:
             image_file = os.path.join(dir_path, f)
             file_base, file_ext = os.path.splitext(image_file)  # 分离文件名与扩展名
