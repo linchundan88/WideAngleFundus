@@ -1,10 +1,10 @@
 import os
 import sys
 sys.path.append(os.path.abspath('..'))
-from libs.DataPreprocess.my_compute_digest import calcSha1
+from libs.data_preprocess.my_compute_digest import calcSha1
 import csv
-from libs.DataPreprocess.my_data import write_images_labels_csv
-from libs.DataPreprocess.my_data_patiend_id import split_dataset_by_pat_id
+from libs.data_preprocess.my_data import write_images_labels_csv
+from libs.data_preprocess.my_data_patiend_id import split_dataset_by_pat_id
 
 
 dir_preprocess = '/disk1/share_8tb/广角眼底2021.04.08/preprocess/384'
@@ -85,7 +85,7 @@ with open(filename_csv, 'w', newline='') as csvfile:
             csv_writer.writerow([image_file, '_'.join(list2)])
 
 '''
-from libs.DataPreprocess.my_data import split_dataset
+from libs.data_preprocess.my_data import split_dataset
 train_files, train_labels, valid_files, valid_labels, test_files, test_labels = \
     split_dataset(filename_csv,  valid_ratio=0.1, test_ratio=0.15, random_state=888)
 '''

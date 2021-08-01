@@ -10,21 +10,18 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import DataLoader
-from libs.Dataset.my_dataset import Dataset_CSV
-from libs.NeuralNetworks.Train_Predict.my_train_multi_labels import train
+from libs.dataset.my_dataset import Dataset_CSV
+from libs.neural_networks.helper.my_train_multi_labels import train
 from imgaug import augmenters as iaa
-from libs.NeuralNetworks.Helper.my_load_model import load_model
+from libs.neural_networks.models.my_load_model import load_model
 
 # region setting
 save_model_dir = '/tmp2/wide_angel/indepedent_classifier1'
 train_type = 'wide_angle'
 data_version = 'v5'
-csv_train = os.path.join(os.path.abspath('..'),
-                         'datafiles', data_version, 'train.csv')
-csv_valid = os.path.join(os.path.abspath('..'),
-                         'datafiles', data_version, f'valid.csv')
-csv_test = os.path.join(os.path.abspath('..'),
-                        'datafiles', data_version, f'test.csv')
+csv_train = os.path.join(os.path.abspath('..'), 'datafiles', data_version, 'train.csv')
+csv_valid = os.path.join(os.path.abspath('..'), 'datafiles', data_version, f'valid.csv')
+csv_test = os.path.join(os.path.abspath('..'), 'datafiles', data_version, f'test.csv')
 
 iaa = iaa.Sequential([
     # iaa.CropAndPad(percent=(-0.04, 0.04)),
@@ -83,11 +80,9 @@ for model_name in ['inception_resnet_v2', 'xception', 'inception_v3']:
         model.to(device)
         loss_pos_weights = loss_pos_weights.cuda()
 
-    # pos_weight:positive negative balance, weight:rescaling weight given to the loss
-    # criterion = nn.BCELoss(weight=loss_class_weights)
     criterion = nn.BCEWithLogitsLoss(pos_weight=loss_pos_weights)
     optimizer = optim.Adam(model.parameters(), weight_decay=0, lr=0.001)
-    # from libs.NeuralNetworks.my_optimizer import Lookahead
+    # from libs.neural_networks.my_optimizer import Lookahead
     # optimizer = Lookahead(optimizer=optimizer, k=5, alpha=0.5)
 
     # region determine the input shape by the model type

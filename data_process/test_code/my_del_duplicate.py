@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 import csv
-from libs.DataPreprocess.my_compute_digest import calcSha1
+from libs.data_preprocess.my_compute_digest import calcSha1
 
 
 filename_csv = os.path.join(os.path.abspath('../..'),

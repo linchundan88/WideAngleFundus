@@ -23,7 +23,7 @@ for dir_path, _, files in os.walk(dir_original):
             os.rename(file_source, file_dest)
 
 
-from libs.ImgPreprocess.my_image_helper import resize_images_dir
+from libs.img_preprocess.my_image_helper import resize_images_dir
 resize_images_dir(dir_original, dir_preprocess, image_shape=(384, 384),
                   convert_image_to_square=True)
 

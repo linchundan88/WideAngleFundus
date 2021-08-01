@@ -2,4 +2,7 @@
 
 .idea
 ./data_process/test_code/
-!/datafiles/
+/libs/neural_networks/obsoleted_optimizer/
+/datafiles/
+/trained_models/
+/tmp/

@@ -1,5 +1,5 @@
 import os
-from libs.DataPreprocess.my_compute_digest import calcSha1
+from libs.data_preprocess.my_compute_digest import calcSha1
 
 list_sha1 = []
 dir1 = '/disk1/share_8tb/2021.4.7第一个模型 错图/我分错的 非目标病变'
