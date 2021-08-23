@@ -31,23 +31,23 @@ dicts_models = []
 
 model_name = 'xception'
 model_file = '/tmp2/wide_angel/v3/xception/epoch7.pth'
-model = load_model(model_name, num_class=num_classes, model_file=model_file)
+model, input_shape = load_model(model_name, num_class=num_classes, model_file=model_file, get_image_shape=True)
 dict_model1 = {'model': model,
-                'input_shape': (299, 299), 'model_weight': 1, 'batch_size': 64}
+                'input_shape': input_shape, 'model_weight': 1, 'batch_size': 64}
 dicts_models.append(dict_model1)
 
 model_name = 'inception_v3'
 model_file = '/tmp2/wide_angel/v3/inception_v3/epoch8.pth'
-model = load_model(model_name, num_class=num_classes, model_file=model_file)
+model, input_shape = load_model(model_name, num_class=num_classes, model_file=model_file, get_image_shape=True)
 dict_model1 = {'model': model,
-                'input_shape': (299, 299), 'model_weight': 0.8, 'batch_size': 64}
+                'input_shape': input_shape, 'model_weight': 0.8, 'batch_size': 64}
 dicts_models.append(dict_model1)
 
 model_name = 'inception_resnet_v2'
 model_file = '/tmp2/wide_angel/v3/inception_resnet_v2/epoch8.pth'
-model = load_model(model_name, num_class=num_classes, model_file=model_file)
+model, input_shape = load_model(model_name, num_class=num_classes, model_file=model_file, get_image_shape=True)
 dict_model1 = {'model': model,
-                'input_shape': (299, 299), 'model_weight': 1, 'batch_size': 64}
+                'input_shape': input_shape, 'model_weight': 1, 'batch_size': 64}
 dicts_models.append(dict_model1)
 
 df = pd.read_csv(csv_file)

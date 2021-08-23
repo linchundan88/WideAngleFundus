@@ -2,7 +2,7 @@ import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 import torch
-from libs.NeuralNetworks.models.my_load_model import load_model
+from libs.neural_networks.models.my_load_model import load_model
 
 
 num_classes = 4

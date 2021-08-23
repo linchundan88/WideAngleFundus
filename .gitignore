@@ -1,8 +1,10 @@
 # Created by .ignore support plugin (hsz.mobi)
 
-.idea
-./data_process/test_code/
+/.idea/
+/data_process/test_code/
 /libs/neural_networks/obsoleted_optimizer/
 /datafiles/
 /trained_models/
 /tmp/
+
+/data_process/test_code/

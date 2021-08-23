@@ -11,8 +11,6 @@ from torch.cuda.amp import autocast, GradScaler
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Why # activation_train, activation_valid ,
-# chose BCEWithLogitsLoss rather than BCELoss because of numerical stability
 def train(model, loader_train, criterion, optimizer, scheduler,
           epochs_num, activation_before_loss=None, activation_valid='sigmoid',
           amp=False, accumulate_grads_times=None,

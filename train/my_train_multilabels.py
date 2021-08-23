@@ -72,7 +72,7 @@ sampler = WeightedRandomSampler(weights=sample_weights, num_samples=len(df))
 # for model_name in ['resnest50d', 'resnest101e', 'res2net50_26w_6s', 'tf_efficientnet_b2', 'tf_efficientnet_b3', 'xception', 'inception_resnet_v2', 'inception_v3']:
 # for model_name in ['tf_efficientnet_b2', 'tf_efficientnet_b3', 'xception', 'inception_v3', 'inception_resnet_v2', 'resnest50d_4s2x40d', 'resnest101e', 'res2net50_26w_6s']:
 for model_name in ['inception_resnet_v2', 'xception', 'inception_v3']:
-    model = load_model(model_name, num_class=num_class)
+    model, image_shape = load_model(model_name, num_class=num_class, get_image_shape=True)
 
     loss_pos_weights = torch.FloatTensor(positive_weights)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -84,29 +84,6 @@ for model_name in ['inception_resnet_v2', 'xception', 'inception_v3']:
     optimizer = optim.Adam(model.parameters(), weight_decay=0, lr=0.001)
     # from libs.neural_networks.obsoleted_optimizer.my_optimizer import Lookahead
     # optimizer = Lookahead(optimizer=optimizer, k=5, alpha=0.5)
-
-    # region determine the input shape by the model type
-    if model_name in ['xception', 'inception_resnet_v2', 'inception_v3']:
-        image_shape = (299, 299)
-    elif 'efficientnet_b0' in model_name:
-        image_shape = (224, 224)
-    elif 'efficientnet_b1' in model_name:
-        image_shape = (240, 240)
-    elif 'efficientnet_b2' in model_name:
-        image_shape = (260, 260)
-    elif 'efficientnet_b3' in model_name:
-        image_shape = (300, 300)
-    elif 'efficientnet_b4' in model_name:
-        image_shape = (380, 380)
-    elif 'efficientnet_b5' in model_name:
-        image_shape = (456, 456)
-    elif 'efficientnet_b6' in model_name:
-        image_shape = (528, 528)
-    elif 'efficientnet_b7' in model_name:
-        image_shape = (600, 600)
-    else:
-        image_shape = (224, 224)
-    # endregion
 
     ds_train = Dataset_CSV(csv_or_df=csv_train, imgaug_iaa=iaa, image_shape=image_shape)
     loader_train = DataLoader(ds_train, batch_size=batch_size_train, shuffle=True,

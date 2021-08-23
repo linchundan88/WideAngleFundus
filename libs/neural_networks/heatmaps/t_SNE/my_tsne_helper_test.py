@@ -3,9 +3,9 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import torch
 import torch.nn as nn
-from libs.NeuralNetworks.models.my_load_model import load_model
+from libs.neural_networks.models.my_load_model import load_model
 from libs.dataset.my_dataset import get_tensor
-from libs.NeuralNetworks.heatmaps.t_SNE.my_tsne_helper import compute_features
+from libs.neural_networks.heatmaps.t_SNE.my_tsne_helper import compute_features
 
 num_classes = 4
 

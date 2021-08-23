@@ -7,7 +7,7 @@ from PIL import Image
 from matplotlib.pyplot import imshow, show
 from torchvision import transforms
 import skimage.transform
-from libs.NeuralNetworks.heatmaps.CAM.cam import get_cam
+from libs.neural_networks.heatmaps.CAM.cam import get_cam
 
 img_path = os.path.join(os.path.abspath('.'), 'cat.jpeg')
 image = Image.open(img_path)
