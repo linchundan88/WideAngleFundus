@@ -3,6 +3,7 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 import sys
 sys.path.append(os.path.abspath('..'))
+from pathlib import Path
 import pandas as pd
 from libs.data_preprocess.my_data import get_images_labels
 from libs.neural_networks.models.my_load_model import load_model
@@ -15,14 +16,12 @@ dir_preprocess = '/disk1/share_8tb/广角眼底2021.04.12/preprocess/384'
 dir_dest = '/disk1/share_8tb/广角眼底2021.05.03/results/test'
 
 save_probs = True
-pkl_prob = os.path.join(dir_dest, 'probs.pkl')
-
+pkl_prob = Path(dir_dest).joinpath('probs.pkl')
 export_confusion_files = False
 
 train_type = 'wide_angle'
 data_version = 'v5'
-csv_file = os.path.join(os.path.abspath('..'),
-                'datafiles', data_version, 'test.csv')
+csv_file = Path(__file__).parent.parent.absolute().joinpath('datafiles', data_version, 'test.csv')
 
 num_classes = 4
 thresholds = [0.5 for x in range(num_classes)]
@@ -55,15 +54,14 @@ files, labels = get_images_labels(filename_csv_or_pd=df)
 
 from libs.neural_networks.helper.my_predict import predict_csv_multiple_model
 prob_total, prob_lists = predict_csv_multiple_model(dicts_models, csv_file, activation='sigmoid')
+preds = prob_total > thresholds
 
 if save_probs:
     import pickle
-    os.makedirs(os.path.dirname(pkl_prob), exist_ok=True)
-    with open(pkl_prob, 'wb') as f:
+    pkl_prob.parent.mkdir(parents=True, exist_ok=True)
+    with pkl_prob.open(mode='wb') as f:
         pickle.dump((prob_total, prob_lists), f)
 
-
-preds = prob_total > thresholds
 
 list_labels = []
 for j in range(num_classes):
@@ -82,16 +80,13 @@ if export_confusion_files:
     for index, (filename, labels) in enumerate(zip(files, labels)):
         for i in range(num_classes):
             label_gt = int(labels.split('_')[i])
-            if preds[index][i]:
-                label_pred = 1
-            else:
-                label_pred = 0
+            label_pred = 1 if preds[index][i] else 0
 
             if label_gt != label_pred:
                 file_source = filename.replace(dir_preprocess, dir_original)
-                file_dest = os.path.join(dir_dest, str(i), f'{str(label_gt)}_{str(label_pred)}',
-                                  f'prob{str(int(prob_total[index][i]*100))}_' + os.path.split(filename)[1])
-                os.makedirs(os.path.dirname(file_dest), exist_ok=True)
+                file_dest = Path(dir_dest).joinpath(str(i), f'{str(label_gt)}_{str(label_pred)}',
+                            f'prob{str(int(prob_total[index][i]*100))}_' + os.path.split(filename)[1])
+                file_dest.parent.mkdir(parents=True, exist_ok=True)
                 print(f'copy file to {file_dest}')
                 shutil.copy(file_source, file_dest)
 

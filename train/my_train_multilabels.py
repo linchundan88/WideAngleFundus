@@ -5,6 +5,7 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
 import sys
 sys.path.append(os.path.abspath('..'))
+from pathlib import Path
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -19,9 +20,9 @@ from libs.neural_networks.models.my_load_model import load_model
 save_model_dir = '/tmp2/wide_angel'
 train_type = 'wide_angle'
 data_version = 'v4'
-csv_train = os.path.join(os.path.abspath('..'), 'datafiles', data_version, 'train.csv')
-csv_valid = os.path.join(os.path.abspath('..'), 'datafiles', data_version, f'valid.csv')
-csv_test = os.path.join(os.path.abspath('..'), 'datafiles', data_version, f'test.csv')
+csv_train = Path(__file__).parent.parent.absolute().joinpath('datafiles', data_version, 'train.csv')
+csv_valid = Path(__file__).parent.parent.absolute().joinpath('datafiles', data_version, 'valid.csv')
+csv_test = Path(__file__).parent.parent.absolute().joinpath('datafiles', data_version, 'test.csv')
 
 iaa = iaa.Sequential([
     # iaa.CropAndPad(percent=(-0.04, 0.04)),
@@ -80,23 +81,19 @@ for model_name in ['inception_resnet_v2', 'xception', 'inception_v3']:
         model.to(device)
         loss_pos_weights = loss_pos_weights.cuda()
 
+    ds_train = Dataset_CSV(data_source=csv_train, imgaug_iaa=iaa, image_shape=image_shape)
+    loader_train = DataLoader(ds_train, batch_size=batch_size_train, shuffle=True, num_workers=num_workers)
+    ds_valid = Dataset_CSV(data_source=csv_valid, image_shape=image_shape)
+    loader_valid = DataLoader(ds_valid, batch_size=batch_size_valid, num_workers=num_workers)
+    ds_test = Dataset_CSV(data_source=csv_test, image_shape=image_shape)
+    loader_test = DataLoader(ds_test, batch_size=batch_size_valid, num_workers=num_workers)
+
     criterion = nn.BCEWithLogitsLoss(pos_weight=loss_pos_weights, reduction='mean')
     optimizer = optim.Adam(model.parameters(), weight_decay=0, lr=0.001)
     # from libs.neural_networks.obsoleted_optimizer.my_optimizer import Lookahead
     # optimizer = Lookahead(optimizer=optimizer, k=5, alpha=0.5)
-
-    ds_train = Dataset_CSV(csv_or_df=csv_train, imgaug_iaa=iaa, image_shape=image_shape)
-    loader_train = DataLoader(ds_train, batch_size=batch_size_train, shuffle=True,
-                              num_workers=num_workers)
-    ds_valid = Dataset_CSV(csv_or_df=csv_valid, image_shape=image_shape)
-    loader_valid = DataLoader(ds_valid, batch_size=batch_size_valid,
-                              num_workers=num_workers)
-    ds_test = Dataset_CSV(csv_or_df=csv_test, image_shape=image_shape)
-    loader_test = DataLoader(ds_test, batch_size=batch_size_valid,
-                             num_workers=num_workers)
-
-    scheduler = StepLR(optimizer, step_size=2, gamma=0.3)
     epochs_num = 10
+    scheduler = StepLR(optimizer, step_size=2, gamma=0.3)
 
     train(model,
           loader_train=loader_train,

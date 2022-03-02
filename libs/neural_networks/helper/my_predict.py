@@ -13,7 +13,9 @@ from libs.dataset.my_dataset import Dataset_CSV
 def predict_csv_single_model(model, filename_csv, image_shape,
                       activation, batch_size=64):
 
-    assert os.path.exists(filename_csv), "csv file not exist"
+    # assert os.path.exists(filename_csv), "csv file not exist"
+    assert filename_csv.exists(), "csv file not exist"
+
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if torch.cuda.device_count() > 0:
@@ -22,7 +24,7 @@ def predict_csv_single_model(model, filename_csv, image_shape,
         model = nn.DataParallel(model)
     model.eval()
 
-    dataset = Dataset_CSV(csv_or_df=filename_csv, image_shape=image_shape, test_mode=True)
+    dataset = Dataset_CSV(data_source=filename_csv, image_shape=image_shape, test_mode=True)
     data_loader = DataLoader(dataset, batch_size=batch_size,
                              num_workers=4)
     list_probs = []

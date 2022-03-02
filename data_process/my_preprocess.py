@@ -9,7 +9,7 @@ dir_preprocess = '/disk1/share_8tb/广角眼底2021.04.12/preprocess/384/'
 for dir_path, _, files in os.walk(dir_original):
     for f in files:
         file_source = os.path.join(dir_path, f)
-        file_base, file_ext = os.path.splitext(file_source)  # 分离文件名与扩展名
+        file_base, file_ext = os.path.splitext(file_source)
         if file_ext.lower() not in ['.bmp', '.jpg', '.jpeg', '.png', '.tiff', '.tif']:
             continue
         if f.startswith('prob'):

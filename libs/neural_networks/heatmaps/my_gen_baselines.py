@@ -22,7 +22,7 @@ def gen_baselines(csv_file, label, image_shape, sample_size):
 
     # img_black = np.zeros(tensor_shape)
 
-    ds = Dataset_CSV(csv_or_df=df, multi_labels=True, image_shape=image_shape)
+    ds = Dataset_CSV(data_source=df, multi_labels=True, image_shape=image_shape)
 
     for i in range(sample_size):
         data1 = ds[i][0].cpu().numpy()
@@ -44,9 +44,8 @@ def gen_baselines(csv_file, label, image_shape, sample_size):
 
 
 if __name__ == "__main__":
-    csv_file = os.path.join(os.path.abspath('../../..'),
-                                 'datafiles', 'train_v1.csv')
-    baselines = gen_baselines(csv_file, label='0_0_0', image_shape=(299, 299), sample_size=64)
+    csv_file = os.path.join(os.path.abspath('../../..'), 'datafiles', 'train_v1.csv')
+    baselines = gen_baselines(csv_file, label='0_0_0_0', image_shape=(299, 299), sample_size=64)
 
     print(baselines.shape)
 

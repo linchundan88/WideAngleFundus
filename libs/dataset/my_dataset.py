@@ -3,6 +3,7 @@ https://colab.research.google.com/drive/109vu3F1LTzD1gdVV6cho9fKGx7lzbFll#scroll
 '''
 
 import os
+from pathlib import Path, PurePath
 import pandas as pd
 import cv2
 import torch
@@ -13,13 +14,13 @@ import numpy as np
 
 
 class Dataset_CSV(Dataset):
-    def __init__(self, csv_or_df, single_label=None, image_shape=None, imgaug_iaa=None, test_mode=False):
+    def __init__(self, data_source, single_label=None, image_shape=None, imgaug_iaa=None, test_mode=False):
         self.single_label = single_label
-        if isinstance(csv_or_df, str):
-            assert os.path.exists(csv_or_df), 'csv file does not exists'
-            self.df = pd.read_csv(csv_or_df)
-        elif isinstance(csv_or_df, pd.DataFrame):
-            self.df = csv_or_df
+        if isinstance(data_source, str) or isinstance(data_source, PurePath):
+            assert os.path.exists(data_source), 'csv file does not exists'
+            self.df = pd.read_csv(data_source)
+        elif isinstance(data_source, pd.DataFrame):
+            self.df = data_source
         else:
             raise ValueError("csv_or_df type error")
 

@@ -2,7 +2,7 @@ import warnings
 warnings.filterwarnings("ignore")
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 import sys
 sys.path.append(os.path.abspath('..'))
 import torch
@@ -14,14 +14,39 @@ from libs.dataset.my_dataset import Dataset_CSV
 from libs.neural_networks.helper.my_train_multi_labels import train
 from imgaug import augmenters as iaa
 from libs.neural_networks.models.my_load_model import load_model
+from pathlib import Path
 
 # region setting
 save_model_dir = '/tmp2/wide_angel/indepedent_classifier1'
 train_type = 'wide_angle'
 data_version = 'v5'
-csv_train = os.path.join(os.path.abspath('..'), 'datafiles', data_version, 'train.csv')
-csv_valid = os.path.join(os.path.abspath('..'), 'datafiles', data_version, f'valid.csv')
-csv_test = os.path.join(os.path.abspath('..'), 'datafiles', data_version, f'test.csv')
+
+num_class = 1   #single label, sigmoid
+
+# single_label_no = 0  # the targeted class label
+# positive_weights = [4]
+# single_label_no = 1
+# positive_weights = [3]
+single_label_no = 2
+positive_weights = [3]
+# single_label_no = 3
+# positive_weights = [100]
+
+'''
+单纯性的格子样变性', '单纯性的孔源性视网膜脱离', '单纯性的视网膜破裂孔', '囊性视网膜突起'
+class no:0
+label 0:5131, label 0:827
+class no:1
+label 0:5005, label 0:953
+class no:2
+label 0:4947, label 0:1011
+class no:3
+label 0:5893, label 0:65
+'''
+
+csv_train = Path(__file__).parent.parent.absolute().joinpath('datafiles', data_version, 'train.csv')
+csv_valid = Path(__file__).parent.parent.absolute().joinpath('datafiles', data_version, 'valid.csv')
+csv_test = Path(__file__).parent.parent.absolute().joinpath('datafiles', data_version, 'test.csv')
 
 iaa = iaa.Sequential([
     # iaa.CropAndPad(percent=(-0.04, 0.04)),
@@ -40,11 +65,6 @@ iaa = iaa.Sequential([
 ])
 
 batch_size_train, batch_size_valid = 32, 64
-#'单纯性的格子样变性', '单纯性的孔源性视网膜脱离', '单纯性的视网膜破裂孔', '囊性视网膜突起', '正常眼底'
-# 872, 1012, 953, 4065, 64
-
-num_class = 1
-positive_weights = [100]
 
 num_workers = 4  # when debugging it should be set to 0.
 
@@ -80,30 +100,26 @@ for model_name in ['inception_resnet_v2', 'xception', 'inception_v3']:
         model.to(device)
         loss_pos_weights = loss_pos_weights.cuda()
 
+    ds_train = Dataset_CSV(data_source=csv_train, single_label=single_label_no, imgaug_iaa=iaa, image_shape=image_shape)
+    loader_train = DataLoader(ds_train, batch_size=batch_size_train, shuffle=True, num_workers=num_workers)
+    ds_valid = Dataset_CSV(data_source=csv_valid, single_label=single_label_no, image_shape=image_shape)
+    loader_valid = DataLoader(ds_valid, batch_size=batch_size_valid, num_workers=num_workers)
+    ds_test = Dataset_CSV(data_source=csv_test, single_label=single_label_no, image_shape=image_shape)
+    loader_test = DataLoader(ds_test, batch_size=batch_size_valid, num_workers=num_workers)
+
     criterion = nn.BCEWithLogitsLoss(pos_weight=loss_pos_weights)
     optimizer = optim.Adam(model.parameters(), weight_decay=0, lr=0.001)
     # from libs.neural_networks.my_optimizer import Lookahead
     # optimizer = Lookahead(optimizer=optimizer, k=5, alpha=0.5)
-
-    ds_train = Dataset_CSV(csv_or_df=csv_train, single_label=3, imgaug_iaa=iaa, image_shape=image_shape)
-    loader_train = DataLoader(ds_train, batch_size=batch_size_train, shuffle=True,
-                              num_workers=num_workers)
-    ds_valid = Dataset_CSV(csv_or_df=csv_valid, single_label=3, image_shape=image_shape)
-    loader_valid = DataLoader(ds_valid, batch_size=batch_size_valid,
-                              num_workers=num_workers)
-    ds_test = Dataset_CSV(csv_or_df=csv_test, single_label=3, image_shape=image_shape)
-    loader_test = DataLoader(ds_test, batch_size=batch_size_valid,
-                             num_workers=num_workers)
-
     scheduler = StepLR(optimizer, step_size=2, gamma=0.3)
     epochs_num = 10
 
     train(model,
           loader_train=loader_train,
           criterion=criterion, optimizer=optimizer, scheduler=scheduler,
-          epochs_num=epochs_num, amp=False, log_interval_train=10,
+          epochs_num=epochs_num, amp=True, log_interval_train=10,
           loader_valid=loader_valid, loader_test=loader_test,
-          save_model_dir=os.path.join(save_model_dir, data_version, model_name)
+          save_model_dir=os.path.join(save_model_dir, data_version, str(single_label_no), model_name)
           )
 
     del model

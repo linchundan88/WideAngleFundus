@@ -59,17 +59,11 @@ def train(model, loader_train, criterion, optimizer, scheduler,
             #     loss = loss1
             # else:
 
-            if not amp:
+            with autocast(enabled=amp):
                 outputs = model(inputs)
                 if activation_before_loss == 'sigmoid':
                     outputs = torch.sigmoid(outputs)
                 loss = criterion(outputs, labels)
-            else:
-                with autocast():
-                    outputs = model(inputs)
-                    if activation_before_loss == 'sigmoid':
-                        outputs = torch.sigmoid(outputs)
-                    loss = criterion(outputs, labels)
 
             if (accumulate_grads_times is None) or  \
                     (accumulate_grads_times is not None and batch_idx % accumulate_grads_times == 0):

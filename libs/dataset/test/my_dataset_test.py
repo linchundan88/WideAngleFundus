@@ -17,7 +17,7 @@ iaa = iaa.Sequential([
                     iaa.GaussianBlur(sigma=(0.0, 0.1)),
                     iaa.MultiplyBrightness(mul=(0.65, 1.35)),
                 ])
-custom_ds = Dataset_CSV(csv_or_df=csv_file_test, imgaug_iaa=iaa, image_shape=[299, 299])
+custom_ds = Dataset_CSV(data_source=csv_file_test, imgaug_iaa=iaa, image_shape=[299, 299])
 # custom_dl = DataLoader(custom_ds, batch_size=1,
 #                        num_workers=1, pin_memory=True)
 

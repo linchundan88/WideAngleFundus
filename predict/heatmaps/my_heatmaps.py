@@ -30,25 +30,20 @@ dir_dest_base = f'/disk1/share_8tb/广角眼底2021.04.12/results/heatmaps/'
 #region load model, setting image_shape and activation function.
 model_name = 'inception_v3'
 if model_name == 'xception':
-    image_shape = (299, 299)
     activation = 'sigmoid'
     model_file = '/tmp2/wide_angel/v3/xception/epoch7.pth'
-    model = load_model(model_name, num_class=num_classes, model_file=model_file)
+    model, image_shape = load_model(model_name, num_class=num_classes, model_file=model_file)
 if model_name == 'inception_v3':
-    image_shape = (299, 299)
     activation = 'sigmoid'
     model_file = '/tmp2/wide_angel/v3/inception_v3/epoch8.pth'
-    model = load_model(model_name, num_class=num_classes, model_file=model_file)
+    model, image_shape = load_model(model_name, num_class=num_classes, model_file=model_file)
 if model_name == 'inception_resnet_v2':
-    image_shape = (299, 299)
     activation = 'sigmoid'
     model_file = '/tmp2/wide_angel/v3/inception_resnet_v2/epoch8.pth'
-    model = load_model(model_name, num_class=num_classes, model_file=model_file)
+    model,image_shape = load_model(model_name, num_class=num_classes, model_file=model_file)
 
 if torch.cuda.device_count() > 0:
     model.to(device)
-# if torch.cuda.device_count() > 1:
-#     model = nn.DataParallel(model)
 
 model = model.eval()
 #endregion
